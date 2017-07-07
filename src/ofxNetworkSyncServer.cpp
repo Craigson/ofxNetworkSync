@@ -122,16 +122,20 @@ void ofxNetworkSyncServer::drawStatus(int x, int y){
 	ostringstream ostr("");
 	
 	if(tcpServer != NULL && tcpServer->isConnected()){
-		ostr << "Server is waiting on port:" << tcpServer->getPort() << endl;
+		ostr << "Server created on PORT: " << tcpServer->getPort() << "\n" << endl;
 	}else{
 		ostr << "failed to start server" << endl;
 	}
+    
+    ostr << "Server up-time:" << getSyncedElapsedTimeMillis() << "\n" << endl;
+    
+    ostr << "Clients connected: " << clientStates.size() << " of 20 \n" << endl;
 	
 	
 	if(clientStates.size() > 0){
 		ostr << "Clients: " << endl;
 		for(auto & c : clientStates){
-			ostr << "    #" << c->getClientID() << " " << c->getIpAddr() << ":" << c->getPort() << " : ";
+			ostr << " #" << c->getClientID() << " " << c->getIpAddr() << ":" << c->getPort() << " : ";
 			if(! c->isConnected()){
 				ostr << "NOT CONNECTED";
 			}else if(c->isCalibrating()){
@@ -144,13 +148,18 @@ void ofxNetworkSyncServer::drawStatus(int x, int y){
 			ostr << endl;
 		}
 	}else{
-		ostr << "Here is no clients." << endl;
+		ostr << "0 CLIENTS CONNECTED" << endl;
 	}
 	
-	ostr << "now:" << getSyncedElapsedTimeMillis();
+	
 	
 	ofSetColor(255);
 	ofDrawBitmapString(ostr.str(), x, y);
+}
+
+std::string ofxNetworkSyncServer::getElapsed()
+{
+    
 }
 
 void ofxNetworkSyncServer::onClientMessageReceived(int clientId, string message){
